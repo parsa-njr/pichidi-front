@@ -103,13 +103,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home, FileText, ClipboardList, User,
-} from "lucide-react";
+import { Home, FileText, ClipboardList, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/user", label: "خانه", icon: Home },
+  { href: "/user", label: "خانه", icon: Home, exact: true },
   { href: "/user/report", label: "گزارش", icon: FileText },
   { href: "/user/request", label: "درخواست", icon: ClipboardList },
   { href: "/user/profile", label: "پروفایل", icon: User },
@@ -121,23 +119,36 @@ export default function UserBottomNav() {
   return (
     <nav
       dir="rtl"
-      style={{ direction: "rtl" }}
-      className="fixed bottom-0  left-0 right-0 w-full z-50 bg-white border-t border-gray-100 shadow-lg"
+      className="sticky bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-100 flex-shrink-0"
+      style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.06)" }}
     >
-      <ul className="flex items-center  w-full justify-around px-2 py-2">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || (href !== "/user" && pathname.startsWith(href));
+      <ul className="flex items-center justify-around py-1">
+        {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact
+            ? pathname === href
+            : pathname === href || pathname.startsWith(href + "/");
+
           return (
             <li key={href} className="flex-1">
               <Link
                 href={href}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-1 transition-colors",
-                  active ? "text-primary" : "text-gray-400 hover:text-gray-600"
-                )}
+                className="flex flex-col items-center justify-center gap-0.5 py-1.5"
               >
-                <Icon className={cn("w-6 h-6", active && "stroke-[2.5px]")} />
-                <span className="text-xs font-medium">{label}</span>
+                <div className={cn(
+                  "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
+                  active ? "bg-primary/10" : ""
+                )}>
+                  <Icon className={cn(
+                    "w-6 h-6 transition-all",
+                    active ? "text-primary stroke-[2.5px]" : "text-gray-400"
+                  )} />
+                </div>
+                <span className={cn(
+                  "text-xs font-medium",
+                  active ? "text-primary" : "text-gray-400"
+                )}>
+                  {label}
+                </span>
               </Link>
             </li>
           );
