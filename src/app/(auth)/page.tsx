@@ -1,455 +1,3 @@
-// // "use client";
-
-// // import { useState } from "react";
-// // import AuthCard from "@/components/auth/AuthCard";
-// // // import { useLogin } from "@/hooks/useAuth";
-
-// // export default function LoginPage() {
-// //   // const login = useLogin();
-
-// //   const [form, setForm] = useState({
-// //     phone: "",
-// //     password: "",
-// //   });
-
-// //   return (
-// //     <AuthCard title="ورود">
-// //       <div className="space-y-4">
-// //         <input
-// //           className="w-full p-3 rounded-xl bg-white/10 text-white outline-none border border-white/10"
-// //           placeholder="شماره موبایل"
-// //           onChange={(e) => setForm({ ...form, phone: e.target.value })}
-// //         />
-
-// //         <input
-// //           type="password"
-// //           className="w-full p-3 rounded-xl bg-white/10 text-white outline-none border border-white/10"
-// //           placeholder="رمز عبور"
-// //           onChange={(e) => setForm({ ...form, password: e.target.value })}
-// //         />
-
-// //         <button
-// //           // onClick={() => login.mutate(form)}
-// //           // disabled={login.isPending}
-// //           className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition"
-// //         >
-// //           {/* {login.isPending ? "در حال ورود..." : "ورود"} */}
-// //           ورود
-// //         </button>
-
-// //         {/* {login.isError && (
-// //           <p className="text-red-400 text-sm text-center">
-// //             خطا در ورود
-// //           </p>
-// //         )} */}
-// //       </div>
-// //     </AuthCard>
-// //   );
-// // }
-
-
-// "use client";
-
-// import { useState } from "react";
-// import { useForm } from "react-hook-form";
-// import axios from "axios";
-
-// import {
-//   Card,
-//   CardContent,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-
-// import { Button } from "@/components/ui/button";
-
-// import { Input } from "@/components/ui/input";
-
-// import {
-//   Tabs,
-//   TabsContent,
-//   TabsList,
-//   TabsTrigger,
-// } from "@/components/ui/tabs";
-
-// import { Loader2 } from "lucide-react";
-
-// type LoginForm = {
-//   phone: string;
-//   password: string;
-// };
-
-// type OtpForm = {
-//   phone: string;
-//   code: string;
-// };
-
-// type RegisterForm = {
-//   name: string;
-//   phone: string;
-//   password: string;
-//   location: string;
-//   shift: string;
-// };
-
-// export default function LoginPage() {
-//   const [otpSent, setOtpSent] = useState(false);
-
-//   const [loading, setLoading] = useState(false);
-
-//   // -----------------------------
-//   // Password Login
-//   // -----------------------------
-
-//   const loginForm = useForm<LoginForm>({
-//     defaultValues: {
-//       phone: "",
-//       password: "",
-//     },
-//   });
-
-//   // -----------------------------
-//   // OTP Login
-//   // -----------------------------
-
-//   const otpForm = useForm<OtpForm>({
-//     defaultValues: {
-//       phone: "",
-//       code: "",
-//     },
-//   });
-
-//   // -----------------------------
-//   // Register
-//   // -----------------------------
-
-//   const registerForm = useForm<RegisterForm>({
-//     defaultValues: {
-//       name: "",
-//       phone: "",
-//       password: "",
-//       location: "",
-//       shift: "",
-//     },
-//   });
-
-//   // -----------------------------
-//   // Password Login Submit
-//   // -----------------------------
-
-//   const onPasswordLogin = async (
-//     data: LoginForm
-//   ) => {
-//     try {
-//       setLoading(true);
-
-//       await axios.post(
-//         "http://localhost:3000/api/auth/login",
-//         data,
-//         {
-//           withCredentials: true,
-//         }
-//       );
-
-//       alert("ورود موفق");
-//     } catch (error: any) {
-//       alert(
-//         error?.response?.data?.message ||
-//           "خطا در ورود"
-//       );
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // -----------------------------
-//   // Send OTP
-//   // -----------------------------
-
-//   const sendOtp = async () => {
-//     try {
-//       setLoading(true);
-
-//       const phone =
-//         otpForm.getValues("phone");
-
-//       await axios.post(
-//         "http://localhost:3000/api/auth/send-otp",
-//         {
-//           phone,
-//         }
-//       );
-
-//       setOtpSent(true);
-
-//       alert(
-//         "کد تایید ارسال شد (1234)"
-//       );
-//     } catch (error: any) {
-//       alert(
-//         error?.response?.data?.message ||
-//           "خطا در ارسال کد"
-//       );
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // -----------------------------
-//   // Verify OTP
-//   // -----------------------------
-
-//   const verifyOtp = async (
-//     data: OtpForm
-//   ) => {
-//     try {
-//       setLoading(true);
-
-//       await axios.post(
-//         "http://localhost:3000/api/auth/verify-otp",
-//         data,
-//         {
-//           withCredentials: true,
-//         }
-//       );
-
-//       alert("ورود موفق");
-//     } catch (error: any) {
-//       alert(
-//         error?.response?.data?.message ||
-//           "کد اشتباه است"
-//       );
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // -----------------------------
-//   // Register Submit
-//   // -----------------------------
-
-//   const onRegister = async (
-//     data: RegisterForm
-//   ) => {
-//     try {
-//       setLoading(true);
-
-//       await axios.post(
-//         "http://localhost:3000/api/auth/sign-up",
-//         data,
-//         {
-//           withCredentials: true,
-//         }
-//       );
-
-//       alert("ثبت نام موفق");
-//     } catch (error: any) {
-//       alert(
-//         error?.response?.data?.message ||
-//           "خطا در ثبت نام"
-//       );
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-white flex items-center justify-center px-4">
-//       <Card className="w-full max-w-md border border-secondary/20 shadow-2xl rounded-3xl">
-//         <CardHeader className="space-y-2 text-center">
-//           <CardTitle className="text-3xl font-black text-primary">
-//             Pichidi
-//           </CardTitle>
-
-//           <p className="text-secondary text-sm">
-//             ورود و ثبت نام مدرن
-//           </p>
-//         </CardHeader>
-
-//         <CardContent>
-//           <Tabs defaultValue="password">
-//             <TabsList className="grid grid-cols-3 mb-6">
-//               <TabsTrigger value="password">
-//                 رمز عبور
-//               </TabsTrigger>
-
-//               <TabsTrigger value="otp">
-//                 کد تایید
-//               </TabsTrigger>
-
-//               <TabsTrigger value="register">
-//                 ثبت نام
-//               </TabsTrigger>
-//             </TabsList>
-
-//             {/* -------------------------------- */}
-//             {/* PASSWORD LOGIN */}
-//             {/* -------------------------------- */}
-
-//             <TabsContent value="password">
-//               <form
-//                 onSubmit={loginForm.handleSubmit(
-//                   onPasswordLogin
-//                 )}
-//                 className="space-y-4"
-//               >
-//                 <Input
-//                   placeholder="شماره موبایل"
-//                   {...loginForm.register(
-//                     "phone"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Input
-//                   type="password"
-//                   placeholder="رمز عبور"
-//                   {...loginForm.register(
-//                     "password"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Button
-//                   disabled={loading}
-//                   className="w-full h-12 rounded-2xl bg-primary hover:bg-primary/90"
-//                 >
-//                   {loading ? (
-//                     <Loader2 className="animate-spin" />
-//                   ) : (
-//                     "ورود"
-//                   )}
-//                 </Button>
-//               </form>
-//             </TabsContent>
-
-//             {/* -------------------------------- */}
-//             {/* OTP LOGIN */}
-//             {/* -------------------------------- */}
-
-//             <TabsContent value="otp">
-//               <form
-//                 onSubmit={otpForm.handleSubmit(
-//                   verifyOtp
-//                 )}
-//                 className="space-y-4"
-//               >
-//                 <Input
-//                   placeholder="شماره موبایل"
-//                   {...otpForm.register(
-//                     "phone"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 {/* {otpSent && ( */}
-//                   <Input
-//                     placeholder="کد تایید"
-//                     {...otpForm.register(
-//                       "code"
-//                     )}
-//                     className="h-12 rounded-2xl"
-//                   />
-//                 {/* )} */}
-
-//                 {!otpSent ? (
-//                   <Button
-//                     type="button"
-//                     onClick={sendOtp}
-//                     disabled={loading}
-//                     className="w-full h-12 rounded-2xl bg-secondary text-white hover:bg-secondary/90"
-//                   >
-//                     {loading ? (
-//                       <Loader2 className="animate-spin" />
-//                     ) : (
-//                       "ارسال کد تایید"
-//                     )}
-//                   </Button>
-//                 ) : (
-//                   <Button
-//                     disabled={loading}
-//                     className="w-full h-12 rounded-2xl bg-primary hover:bg-primary/90"
-//                   >
-//                     {loading ? (
-//                       <Loader2 className="animate-spin" />
-//                     ) : (
-//                       "تایید کد"
-//                     )}
-//                   </Button>
-//                 )}
-//               </form>
-//             </TabsContent>
-
-//             {/* -------------------------------- */}
-//             {/* REGISTER */}
-//             {/* -------------------------------- */}
-
-//             <TabsContent value="register">
-//               <form
-//                 onSubmit={registerForm.handleSubmit(
-//                   onRegister
-//                 )}
-//                 className="space-y-4"
-//               >
-//                 <Input
-//                   placeholder="نام"
-//                   {...registerForm.register(
-//                     "name"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Input
-//                   placeholder="شماره موبایل"
-//                   {...registerForm.register(
-//                     "phone"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Input
-//                   type="password"
-//                   placeholder="رمز عبور"
-//                   {...registerForm.register(
-//                     "password"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Input
-//                   placeholder="Location ID"
-//                   {...registerForm.register(
-//                     "location"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Input
-//                   placeholder="Shift ID"
-//                   {...registerForm.register(
-//                     "shift"
-//                   )}
-//                   className="h-12 rounded-2xl"
-//                 />
-
-//                 <Button
-//                   disabled={loading}
-//                   className="w-full h-12 rounded-2xl bg-primary hover:bg-primary/90"
-//                 >
-//                   {loading ? (
-//                     <Loader2 className="animate-spin" />
-//                   ) : (
-//                     "ثبت نام"
-//                   )}
-//                 </Button>
-//               </form>
-//             </TabsContent>
-//           </Tabs>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// }
 
 
 "use client";
@@ -480,16 +28,16 @@ type RegisterForm = {
     name: string;
     phone: string;
     password: string;
-    role: "user" | "customer";
-    location?: string;
-    shift?: string;
+    role?: "user" | "customer";
+    // location?: string;
+    // shift?: string;
 };
 
 // ─────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────
 
-const API = "http://localhost:3000/api/auth";
+const API = "http://localhost:8080/api/v1/auth";
 
 const inputBase =
     "h-12 rounded-2xl bg-white/5 border border-white/10 text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary pr-10 text-right";
@@ -506,7 +54,7 @@ export default function LoginPage() {
 
     const loginForm = useForm<LoginForm>({ defaultValues: { phone: "", password: "" } });
     const otpForm = useForm<OtpForm>({ defaultValues: { phone: "", code: "" } });
-    const regForm = useForm<RegisterForm>({ defaultValues: { name: "", phone: "", password: "", role: "user", location: "", shift: "" } });
+    const regForm = useForm<RegisterForm>({ defaultValues: { name: "", phone: "", password: "", role: "user" } });
 
     const selectedRole = regForm.watch("role");
 
@@ -565,7 +113,11 @@ export default function LoginPage() {
     const onRegister = async (data: RegisterForm) => {
         try {
             setLoading(true);
-            await axios.post(`${API}/sign-up`, data, { withCredentials: true });
+            await axios.post(`${API}/sign-up`, {
+                name: data?.name,
+                phone: data?.phone,
+                password: data?.password
+            }, { withCredentials: true });
             alert("ثبت‌نام موفق");
         } catch (err: any) {
             alert(err?.response?.data?.message || "خطا در ثبت‌نام");
@@ -796,7 +348,7 @@ export default function LoginPage() {
                                 </div>
 
                                 {/* Extra fields only for employee */}
-                                {selectedRole === "user" && (
+                                {/* {selectedRole === "user" && (
                                     <>
                                         <Input
                                             placeholder="Location ID"
@@ -809,7 +361,7 @@ export default function LoginPage() {
                                             className={inputBase}
                                         />
                                     </>
-                                )}
+                                )} */}
 
                                 <Button
                                     disabled={loading}
