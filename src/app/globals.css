@@ -126,3 +126,11 @@
     @apply bg-background text-foreground ;
   }
 }
+/* react-multi-date-picker: keep the popup above bottom sheets and full-width in narrow layout */
+.rmdp-container {
+  width: 100%;
+}
+.rmdp-wrapper,
+.rmdp-shadow {
+  z-index: 200 !important;
+}
