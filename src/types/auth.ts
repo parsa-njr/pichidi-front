@@ -4,6 +4,7 @@ export interface AuthUser {
     id: string;
     name: string;
     phone: string;
+    profileImage?: string | null;
 }
 
 export interface AuthResponse {

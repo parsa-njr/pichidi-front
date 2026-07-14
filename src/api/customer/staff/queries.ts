@@ -1,5 +1,5 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { staffApi, StaffPayload } from "./api";
 import { handleApiError } from "@/utils/handleApiError";
@@ -8,14 +8,25 @@ export const staffKeys = {
     all: (search?: string) => ["customer", "staff", search ?? ""] as const,
 };
 
-export function useStaff(search?: string) {
-    return useQuery({
+const PER_PAGE = 15;
+
+export function useInfiniteStaff(search?: string) {
+    return useInfiniteQuery({
         queryKey: staffKeys.all(search),
-        queryFn: () => staffApi.getAll(search),
-        select: (data) => data?.data?.data ?? data?.data ?? [],
+        queryFn: ({ pageParam }) =>
+            staffApi.getAll({ search, page: pageParam, per_page: PER_PAGE }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            const pagination = lastPage?.data;
+            if (!pagination?.next_page_url) return undefined;
+            return (pagination.current_page ?? 1) + 1;
+        },
+        select: (data) => ({
+            pages: data.pages,
+            items: data.pages.flatMap((page) => page?.data?.data ?? []),
+        }),
     });
 }
-
 export function useCreateStaff() {
     const qc = useQueryClient();
     return useMutation({

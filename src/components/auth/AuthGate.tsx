@@ -21,12 +21,12 @@ export default function AuthGate({
         }
     }, [data, isError, role, router]);
 
-    if (isLoading || !data || data.role !== role) {
-        return (
-            <div className="flex items-center justify-center min-h-dvh">
-                <Loader2 className="w-6 h-6 text-primary animate-spin" />
-            </div>
-        );
-    }
+    // if (isLoading || !data || data.role !== role) {
+    //     return (
+    //         <div className="flex items-center justify-center min-h-dvh">
+    //             <Loader2 className="w-6 h-6 text-primary animate-spin" />
+    //         </div>
+    //     );
+    // }
     return <>{children}</>;
 }

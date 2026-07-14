@@ -8,11 +8,15 @@ export interface StaffPayload {
     shift: string;
 }
 
+export interface GetStaffParams {
+    search?: string;
+    page: number;
+    per_page: number;
+}
+
 export const staffApi = {
-    getAll: (search?: string) =>
-        apiClient
-            .get("/api/v1/customer/users", { params: search ? { search } : undefined })
-            .then((r) => r.data),
+    getAll: (params: GetStaffParams) =>
+        apiClient.get("/api/v1/customer/users", { params }).then((r) => r.data),
 
     create: (payload: StaffPayload) =>
         apiClient.post("/api/v1/customer/users", payload).then((r) => r.data),

@@ -1,5 +1,6 @@
 import AuthGate from "@/components/auth/AuthGate";
 import CustomerBottomNav from "@/components/customer/CustomerBottomNav";
+import Header from "@/components/shared/Header";
 import NextTopLoader from "nextjs-toploader";
 
 export default async function CustomerLayout({
@@ -11,6 +12,7 @@ export default async function CustomerLayout({
     <>
       <AuthGate role="customer">
         <NextTopLoader showSpinner={false} />
+        <Header />
         <main className="flex-1 overflow-y-auto">{children}</main>
 
         <CustomerBottomNav />

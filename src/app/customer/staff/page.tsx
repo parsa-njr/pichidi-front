@@ -464,19 +464,21 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
-  Search, Plus, MoreVertical, Pencil, Trash2,
-  User, ChevronDown, Users,
+  Search, MoreVertical, Pencil, Trash2,
+  User, Users, Loader2,
+  ChevronDown,
 } from "lucide-react";
 import { BottomSheet, ConfirmDialog } from "@/components/ui/AppModal";
+import FloatingAddButton from "@/components/ui/FloatingAddButton";
 import { useLocations } from "@/api/customer/location/queries";
 import { useShifts } from "@/api/customer/shift/queries";
 import {
-  useStaff, useCreateStaff, useUpdateStaff, useDeleteStaff,
+  useInfiniteStaff, useCreateStaff, useUpdateStaff, useDeleteStaff,
 } from "@/api/customer/staff/queries";
-import FloatingAddButton from "@/components/ui/FloatingAddButton";
-
+import { useInfiniteScrollTrigger } from "@/hooks/useInfiniteScrollTrigger";
+import { resolveImageUrl } from "@/utils/resolveImageUrl";
 interface IUser {
   _id: string;
   name: string;
@@ -583,13 +585,22 @@ function UserForm({ initial, locations, shifts, onSubmit, submitting, submitLabe
 }
 
 export default function StaffPage() {
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState(""); // debounced value actually sent to the API
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<IUser | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  const { data: users = [], isLoading } = useStaff(search);
+  // Debounce search input → backend query (400ms)
+  useEffect(() => {
+    const t = setTimeout(() => setSearch(searchInput), 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  const {
+    data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage,
+  } = useInfiniteStaff(search);
   const { data: locations = [] } = useLocations();
   const { data: shifts = [] } = useShifts();
 
@@ -597,9 +608,13 @@ export default function StaffPage() {
   const updateStaff = useUpdateStaff();
   const deleteStaff = useDeleteStaff();
 
-  const filtered: IUser[] = users.filter(
-    (u: IUser) => u.name.toLowerCase().includes(search.toLowerCase()) || u.phone.includes(search)
-  );
+  const users: IUser[] = useMemo(() => data?.items ?? [], [data]);
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const sentinelRef = useInfiniteScrollTrigger(loadMore, hasNextPage ?? false);
 
   const handleAdd = (form: { name: string; phone: string; password: string; location: string; shift: string }) => {
     createStaff.mutate(form, { onSuccess: () => setAddOpen(false) });
@@ -635,16 +650,19 @@ export default function StaffPage() {
       </div>
 
       {/* List */}
+   
       <div className="flex-1 overflow-y-auto px-4 py-3 pb-24">
         {isLoading ? (
-          <div className="flex justify-center pt-16 text-sm text-gray-400">در حال بارگذاری...</div>
-        ) : filtered.length === 0 ? (
+          <div className="flex justify-center pt-16">
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+          </div>
+        ) : users.length === 0 ? (
           <div className="flex flex-col items-center pt-20 gap-3">
             <Users className="w-12 h-12 text-gray-200" />
             <p className="text-gray-400 text-sm">کاربری یافت نشد</p>
           </div>
         ) : (
-          filtered.map((user) => (
+          users.map((user) => (
             <div key={user._id} dir="rtl" className="bg-white rounded-2xl px-4 py-4 mb-3 shadow-sm border border-gray-100 flex items-center gap-3">
                             <div className="relative">
                 <button
@@ -687,6 +705,13 @@ export default function StaffPage() {
               <Avatar name={user.name} image={user.profileImage} />
             </div>
           ))
+        )}
+
+        {/* Infinite scroll sentinel + loading indicator */}
+        {!isLoading && users.length > 0 && (
+          <div ref={sentinelRef} className="flex justify-center py-4">
+            {isFetchingNextPage && <Loader2 className="w-5 h-5 text-primary animate-spin" />}
+          </div>
         )}
       </div>
 
