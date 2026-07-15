@@ -13,8 +13,15 @@ export interface ShiftPayload {
     exceptionDays: ExceptionDay[];
 }
 
+export interface GetShiftsParams {
+    search?: string;
+    page: number;
+    per_page: number;
+}
+
 export const shiftApi = {
-    getAll: () => apiClient.get("/api/v1/customer/shifts").then((r) => r.data),
+    getAll: (params: GetShiftsParams) =>
+        apiClient.get("/api/v1/customer/shifts", { params }).then((r) => r.data),
     getById: (id: string) => apiClient.get(`/api/v1/customer/shifts/${id}`).then((r) => r.data),
     create: (payload: ShiftPayload) => apiClient.post("/api/v1/customer/shifts", payload).then((r) => r.data),
     update: (id: string, payload: ShiftPayload) =>

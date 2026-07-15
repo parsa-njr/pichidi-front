@@ -7,12 +7,15 @@ export interface LocationPayload {
     range: number;
 }
 
-export const locationApi = {
-    getAll: (search?: string) =>
-        apiClient
-            .get("/api/v1/customer/locations", { params: search ? { search } : undefined })
-            .then((r) => r.data),
+export interface GetLocationsParams {
+    search?: string;
+    page: number;
+    per_page: number;
+}
 
+export const locationApi = {
+    getAll: (params: GetLocationsParams) =>
+        apiClient.get("/api/v1/customer/locations", { params }).then((r) => r.data),
     create: (payload: LocationPayload) =>
         apiClient.post("/api/v1/customer/locations", payload).then((r) => r.data),
 
