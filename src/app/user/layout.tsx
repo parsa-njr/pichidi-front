@@ -1,3 +1,5 @@
+import AuthGate from "@/components/auth/AuthGate";
+import Header from "@/components/shared/Header";
 import UserBottomNav from "@/components/user/UserBottomNav";
 import NextTopLoader from "nextjs-toploader";
 
@@ -8,10 +10,13 @@ export default async function UserLayout({
 }>) {
   return (
     <>
-    <NextTopLoader showSpinner={false} />
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <AuthGate role="user">
+        <NextTopLoader showSpinner={false} />
+        <Header />
+        <main className="flex-1 overflow-y-auto">{children}</main>
 
-      <UserBottomNav />
+        <UserBottomNav />
+      </AuthGate>
     </>
   );
 }

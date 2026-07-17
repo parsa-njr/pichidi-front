@@ -66,6 +66,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
+import Providers from "./Providers";
 
 const iranSans = localFont({
   src: [
@@ -95,9 +96,8 @@ export default function RootLayout({
           <div
             id="app-container"
             className="w-full h-full relative max-w-100 min-h-dvh bg-white flex flex-col overflow-hidden"
-          // ↑ relative + overflow-hidden = هیچ چیزی بیرون نمیزنه
           >
-            {children}
+            <Providers>{children}</Providers>
           </div>
         </div>
       </body>

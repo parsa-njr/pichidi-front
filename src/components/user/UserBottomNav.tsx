@@ -110,7 +110,7 @@ const NAV_ITEMS = [
   { href: "/user", label: "خانه", icon: Home, exact: true },
   { href: "/user/report", label: "گزارش", icon: FileText },
   { href: "/user/request", label: "درخواست", icon: ClipboardList },
-  { href: "/user/profile", label: "پروفایل", icon: User },
+  // { href: "/user/profile", label: "پروفایل", icon: User },
 ];
 
 export default function UserBottomNav() {
@@ -119,7 +119,7 @@ export default function UserBottomNav() {
   return (
     <nav
       dir="rtl"
-      className="sticky bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-100 flex-shrink-0"
+      className="sticky bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-100 flex-shrink-0 rounded-t-3xl"
       style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.06)" }}
     >
       <ul className="flex items-center justify-around py-1">

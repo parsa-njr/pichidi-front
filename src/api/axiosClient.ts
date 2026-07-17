@@ -1,32 +1,47 @@
 import axios from "axios";
 
-// Base URLs from env (fallbacks included)
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
-// =========================
-
-// Main API Client (with token)
-// =========================
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  withCredentials: true, // backend uses httpOnly cookies, not Bearer tokens
+  headers: { "Content-Type": "application/json" },
 });
 
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+let isRefreshing = false;
+let queue: Array<() => void> = [];
 
-// Response interceptor for apiClient (optional global error handling)
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (res) => res,
+  async (error) => {
+    const original = error.config;
+    const status = error?.response?.status;
+    const isAuthRoute = original?.url?.includes("/auth/");
+
+    if (status === 401 && original && !original._retry && !isAuthRoute) {
+      original._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          await apiClient.post("/api/v1/auth/refresh");
+          queue.forEach((cb) => cb());
+          queue = [];
+          return apiClient(original);
+        } catch (err) {
+          queue = [];
+          return Promise.reject(err);
+        } finally {
+          isRefreshing = false;
+        }
+      }
+
+      return new Promise((resolve) => {
+        queue.push(() => resolve(apiClient(original)));
+      });
+    }
+
     return Promise.reject(error);
   }
 );
