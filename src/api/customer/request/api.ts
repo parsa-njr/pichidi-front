@@ -20,11 +20,15 @@ export interface UpdateRequestStatusPayload {
     customerNote?: string;
 }
 
+export interface GetCustomerRequestsParams {
+    search?: string;
+    page: number;
+    per_page: number;
+}
+
 export const customerRequestApi = {
-    getAll: (search?: string) =>
-        apiClient
-            .get("/api/v1/customer/requests", { params: search ? { search } : undefined })
-            .then((r) => r.data),
+    getAll: (params: GetCustomerRequestsParams) =>
+        apiClient.get("/api/v1/customer/requests", { params }).then((r) => r.data),
 
     updateStatus: (id: string, payload: UpdateRequestStatusPayload) =>
         apiClient.post(`/api/v1/customer/requests/${id}`, payload).then((r) => r.data),

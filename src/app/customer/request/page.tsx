@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Search, FileText, CheckCircle2, XCircle, Clock, User, Loader2,
 } from "lucide-react";
 
 import { BottomSheet, ConfirmDialog } from "@/components/ui/AppModal";
-import { useCustomerRequests, useUpdateRequestStatus } from "@/api/customer/request/queries";
+import { useInfiniteCustomerRequests, useUpdateRequestStatus } from "@/api/customer/request/queries";
 import { IRequest } from "@/api/customer/request/api";
+import { useInfiniteScrollTrigger } from "@/hooks/useInfiniteScrollTrigger";
 
 // ─── Labels ──────────────────────────────────────────────────────────────────
 const TYPE_LABELS: Record<string, string> = {
@@ -163,16 +164,33 @@ function RequestDetailSheet({ req, onAccept, onReject, acting }: {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function CustomerRequestPage() {
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<(typeof FILTERS)[number]["key"]>("all");
   const [selected, setSelected] = useState<IRequest | null>(null);
   const [confirmAccept, setConfirmAccept] = useState(false);
 
-  const { data: requests = [], isLoading } = useCustomerRequests(search);
+  useEffect(() => {
+    const t = setTimeout(() => setSearch(searchInput), 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  const {
+    data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage,
+  } = useInfiniteCustomerRequests(search);
   const updateStatus = useUpdateRequestStatus();
 
+  const requests: IRequest[] = useMemo(() => data?.items ?? [], [data]);
+
+  // status filter stays client-side since backend searchFilter only covers `status` as free text,
+  // not as an exact-match chip filter — this keeps the chip UX instant without extra requests
   const filtered = requests.filter((r) => statusFilter === "all" || r.status === statusFilter);
 
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const sentinelRef = useInfiniteScrollTrigger(loadMore, hasNextPage ?? false);
   const handleAccept = () => {
     if (!selected) return;
     updateStatus.mutate(
@@ -194,16 +212,16 @@ export default function CustomerRequestPage() {
       {/* Header */}
       <div className="bg-white px-5 pt-6 pb-4 shadow-sm sticky top-0 z-10">
         <p className="text-base font-bold text-gray-800 text-right mb-4">درخواست‌ها</p>
-        <div className="relative mb-3">
+        {/* <div className="relative mb-3">
           <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             dir="rtl"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="جستجو…"
             className="w-full bg-gray-100 rounded-full pr-10 pl-4 py-2.5 text-sm focus:outline-none"
           />
-        </div>
+        </div> */}
 
         {/* Status filter chips */}
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
@@ -259,6 +277,12 @@ export default function CustomerRequestPage() {
               </button>
             );
           })
+        )}
+
+        {!isLoading && filtered.length > 0 && (
+          <div ref={sentinelRef} className="flex justify-center py-4">
+            {isFetchingNextPage && <Loader2 className="w-5 h-5 text-primary animate-spin" />}
+          </div>
         )}
       </div>
 

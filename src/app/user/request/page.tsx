@@ -307,21 +307,20 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
-  X, FileText, CheckCircle2, XCircle, Clock,
-  Search,
+  X, FileText, CheckCircle2, XCircle, Clock, Search, Loader2,
 } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-
 import { BottomSheet } from "@/components/ui/AppModal";
 import FloatingAddButton from "@/components/ui/FloatingAddButton";
-import { useRequests, useCreateRequest } from "@/api/user/request/queries";
+import { useInfiniteRequests, useCreateRequest } from "@/api/user/request/queries";
 import { IRequest, RequestType } from "@/api/user/request/api";
+import { useInfiniteScrollTrigger } from "@/hooks/useInfiniteScrollTrigger";
 
 // ─── Labels ──────────────────────────────────────────────────────────────────
 const TYPE_LABELS: Record<string, string> = {
@@ -503,12 +502,28 @@ function DetailSheet({ req }: { req: IRequest }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function EmployeeRequestPage() {
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const [addOpen, setAddOpen] = useState(false);
   const [selected, setSelected] = useState<IRequest | null>(null);
-  const [search, setSearch] = useState("");
 
-  const { data: requests = [], isLoading } = useRequests();
+  useEffect(() => {
+    const t = setTimeout(() => setSearch(searchInput), 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  const {
+    data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage,
+  } = useInfiniteRequests(search);
   const createRequest = useCreateRequest();
+
+  const requests: IRequest[] = useMemo(() => data?.items ?? [], [data]);
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const sentinelRef = useInfiniteScrollTrigger(loadMore, hasNextPage ?? false);
 
   const handleAdd = (v: { requestType: RequestType; startDate: string; endDate: string; note: string }) => {
     createRequest.mutate(
@@ -519,18 +534,18 @@ export default function EmployeeRequestPage() {
 
   return (
     <div dir="rtl" className="flex flex-col min-h-full bg-gray-50">
-      <div className="bg-white px-5 pt-6 pb-4 shadow-sm sticky top-0 z-10 ">
-        <p className="text-base font-bold text-gray-800 text-right">درخواست‌های من</p>
-        <div className="relative mb-3">
+      <div className="bg-white px-5 pt-6 pb-4 shadow-sm sticky top-0 z-10">
+        <p className="text-base font-bold text-gray-800 text-right mb-4">درخواست‌های من</p>
+        {/* <div className="relative">
           <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             dir="rtl"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="جستجو…"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="جستجو بر اساس وضعیت…"
             className="w-full bg-gray-100 rounded-full pr-10 pl-4 py-2.5 text-sm focus:outline-none"
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-3 pb-24">
@@ -565,6 +580,12 @@ export default function EmployeeRequestPage() {
               </button>
             );
           })
+        )}
+
+        {!isLoading && requests.length > 0 && (
+          <div ref={sentinelRef} className="flex justify-center py-4">
+            {isFetchingNextPage && <Loader2 className="w-5 h-5 text-primary animate-spin" />}
+          </div>
         )}
       </div>
 

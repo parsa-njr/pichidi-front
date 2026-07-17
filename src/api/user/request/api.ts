@@ -21,11 +21,15 @@ export interface IRequest {
     createdAt: string;
 }
 
+export interface GetUserRequestsParams {
+    search?: string;
+    page: number;
+    per_page: number;
+}
+
 export const requestApi = {
-    getAll: (search?: string) =>
-        apiClient
-            .get("/api/v1/user/requests", { params: search ? { search } : undefined })
-            .then((r) => r.data),
+    getAll: (params: GetUserRequestsParams) =>
+        apiClient.get("/api/v1/user/requests", { params }).then((r) => r.data),
 
     create: (payload: CreateRequestPayload) =>
         apiClient.post("/api/v1/user/requests", payload).then((r) => r.data),

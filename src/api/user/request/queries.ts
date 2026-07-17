@@ -1,5 +1,5 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { requestApi, CreateRequestPayload, IRequest } from "./api";
 import { handleApiError } from "@/utils/handleApiError";
@@ -8,11 +8,23 @@ export const requestKeys = {
     all: (search?: string) => ["user", "requests", search ?? ""] as const,
 };
 
-export function useRequests(search?: string) {
-    return useQuery({
+const PER_PAGE = 15;
+
+export function useInfiniteRequests(search?: string) {
+    return useInfiniteQuery({
         queryKey: requestKeys.all(search),
-        queryFn: () => requestApi.getAll(search),
-        select: (data): IRequest[] => data?.data?.data ?? data?.data ?? [],
+        queryFn: ({ pageParam }) =>
+            requestApi.getAll({ search, page: pageParam, per_page: PER_PAGE }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            const pagination = lastPage?.data;
+            if (!pagination?.next_page_url) return undefined;
+            return (pagination.current_page ?? 1) + 1;
+        },
+        select: (data) => ({
+            pages: data.pages,
+            items: data.pages.flatMap((page): IRequest[] => page?.data?.data ?? []),
+        }),
     });
 }
 
