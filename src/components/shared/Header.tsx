@@ -6,6 +6,7 @@ import { User, LogOut, ChevronDown } from "lucide-react";
 import { useMe } from "@/api/auth/queries";
 import { useLogout } from "@/api/auth/queries";
 import { resolveImageUrl } from "@/utils/resolveImageUrl";
+import NotificationBell from "./NotificationBell";
 
 function getInitial(name?: string) {
     return name?.trim()?.charAt(0)?.toUpperCase() ?? "؟";
@@ -117,6 +118,7 @@ export default function Header() {
                         </button>
                     </div>
                 </div>
+                <NotificationBell />
             </div>
         </header>
     );
