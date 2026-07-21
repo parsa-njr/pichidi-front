@@ -83,10 +83,10 @@ export default function NotificationBell() {
                     }`}
             >
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-50">
-                    <button onClick={handleMarkAll} className="text-xs text-primary font-medium">
-                        علامت‌گذاری همه به‌عنوان خوانده‌شده
-                    </button>
                     <p className="text-sm font-semibold text-gray-800">اعلان‌ها</p>
+                    {/* <button onClick={handleMarkAll} className="text-xs text-primary font-medium">
+                        علامت‌گذاری همه به‌عنوان خوانده‌شده
+                    </button> */}
                 </div>
 
                 <div className="max-h-80 overflow-y-auto">
