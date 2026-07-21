@@ -50,18 +50,18 @@ export default function CheckStatusCard({
                         )}
 
                         {locationStatus === "denied" && (
-                            <div className="mt-3 w-full bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center justify-between gap-2">
-                                <button onClick={onRetryLocation} className="text-primary text-xs font-medium">تلاش مجدد</button>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-red-700 text-xs">دسترسی به موقعیت مکانی رد شده است</span>
-                                    <MapPin className="w-4 h-4 text-red-500" />
-                                </div>
+                        <div className="mt-3 w-full bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-red-500" />
+                                <span className="text-red-700 text-xs">دسترسی به موقعیت مکانی رد شده است</span>
                             </div>
+                            <button onClick={onRetryLocation} className="text-primary text-xs font-medium">تلاش مجدد</button>
+                        </div>
                         )}
                         {locationStatus === "unavailable" && (
-                            <div className="mt-3 w-full bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center justify-end gap-2">
-                                <span className="text-red-700 text-xs">موقعیت مکانی در دسترس نیست</span>
+                            <div className="mt-3 w-full bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center justify-start gap-2">
                                 <MapPin className="w-4 h-4 text-red-500" />
+                                <span className="text-red-700 text-xs">موقعیت مکانی در دسترس نیست</span>
                             </div>
                         )}
                     </>
