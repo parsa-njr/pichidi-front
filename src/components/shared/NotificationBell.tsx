@@ -33,8 +33,10 @@ export default function NotificationBell() {
     const { data: me } = useMe();
     const isCustomer = me?.role === "customer";
 
-    const customerQuery = useCustomerNotifications();
-    const userQuery = useUserNotifications();
+    // const customerQuery = useCustomerNotifications();
+    // const userQuery = useUserNotifications();
+    const customerQuery = useCustomerNotifications(!!me && isCustomer);
+    const userQuery = useUserNotifications(!!me && !isCustomer);
     const { items = [], unreadCount = 0 } = isCustomer ? customerQuery.data ?? {} : userQuery.data ?? {};
 
     const markCustomerRead = useMarkCustomerNotificationRead();

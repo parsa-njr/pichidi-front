@@ -8,6 +8,7 @@ import { useLogout } from "@/api/auth/queries";
 import { resolveImageUrl } from "@/utils/resolveImageUrl";
 import NotificationBell from "./NotificationBell";
 import { getInitial } from "@/utils/getInitial";
+import Image from "next/image";
 
 
 
@@ -47,15 +48,28 @@ export default function Header() {
     return (
         <header
             dir="rtl"
-            className={`sticky top-0 z-20 flex-shrink-0 bg-primary border-b border-primary/20 ${!inDashboard && "rounded-b-2xl"} `}
+            className={`sticky flex justify-between top-0 z-20 flex-shrink-0 bg-primary border-b border-primary/20 ${!inDashboard && "rounded-b-2xl"} `}
             style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}
-        >
+        >  <div className="relative h-20 w-20 flex-shrink-0"> {/* ابعاد ثابت باکس لوگو */}
+                <Image
+                    src="/images/pichidiLogo.svg"
+                    alt="Logo"
+                    fill
+                    className="object-contain"
+                    priority
+                />
+            </div>
             <div className="flex items-center justify-between px-5 py-3">
                 {/* Brand mark */}
                 {/* Brand mark */}
-                <div className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                    <span className="text-primary-foreground text-sm font-black">P</span>
-                </div>
+               
+                {/* <Image
+                    src="/images/pichidiLogo.svg"
+                    alt="Logo"
+                    width={64}
+                    height={36}
+                /> */}
+              
                 <div className="flex gap-2 items-center">
 
                     {/* Profile trigger */}

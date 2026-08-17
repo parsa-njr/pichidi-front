@@ -30,8 +30,10 @@ export default function UserReportModal({ data, name, open, onClose }: UserRepor
                     <div className="bg-gray-50 rounded-2xl p-4 mb-5 border border-gray-100">
                         <p className="text-sm font-bold text-gray-700 text-center mb-3">مجموع تردد‌ها</p>
                         <DetailRow label="مجموع ساعات حضور" value={data.totalReport.totalActualTime} />
-                        <DetailRow label="مجموع تاخیر" value={data.totalReport.totalDelay} />
                         <DetailRow label="مجموع مرخصی" value={data.totalReport.totalLeaveTime} />
+                        <DetailRow label="مجموع اضافه‌کاری" value={data.totalReport.totalOvertime} />
+                        <DetailRow label="مجموع تاخیر" value={data.totalReport.totalDelay} />
+                        <DetailRow label="مجموع کسری" value={data.totalReport.totalDeficit} />
                     </div>
 
                     {data.finalReport.map((day, i) => (
@@ -40,18 +42,21 @@ export default function UserReportModal({ data, name, open, onClose }: UserRepor
                                 onClick={() => setExpanded(expanded === i ? null : i)}
                                 className="w-full flex items-center justify-between px-4 py-3"
                             >
-                                {expanded === i ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
                                 <div className="text-right">
                                     <p className="text-sm font-semibold text-gray-800">{day.shamsiDate ?? toJalali(day.date)}</p>
                                     <p className="text-xs text-gray-400">{day.actualMinutes ?? "0"} کار شده</p>
                                 </div>
+                                {expanded === i ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
                             </button>
                             {expanded === i && (
                                 <div className="bg-gray-50 mx-3 mb-3 rounded-xl px-4 py-3">
                                     <DetailRow label="ورود" value={day.actualCheckIn} />
                                     <DetailRow label="خروج" value={day.actualCheckOut} />
                                     <DetailRow label="ساعات کاری" value={day.actualMinutes} />
+                                    <DetailRow label="مرخصی" value={day.leaveMinutes} />
+                                    <DetailRow label="اضافه‌کاری" value={day.overtimeMinutes} />
                                     <DetailRow label="تاخیر" value={day.delayMinutes} />
+                                    <DetailRow label="کسری" value={day.deficitMinutes} />
                                 </div>
                             )}
                         </div>

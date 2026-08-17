@@ -41,11 +41,11 @@ export default function CheckStatusCard({
                         <CheckButton isCheckedIn={isCheckedIn} loading={acting} onClick={onCheckClick} />
 
                         {isCheckedIn && checkInTime && (
-                            <div className="mt-5 w-full bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center justify-end gap-2 animate-in fade-in-0">
+                            <div className="mt-5 w-full bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center justify-start gap-2 animate-in fade-in-0">
+                                <Clock className="w-4 h-4 text-blue-600" />
                                 <span className="text-blue-800 text-sm">
                                     زمان ورود: <span className="font-bold">{checkInTime}</span>
                                 </span>
-                                <Clock className="w-4 h-4 text-blue-600" />
                             </div>
                         )}
 

@@ -6,6 +6,7 @@ import { useMe } from "@/api/auth/queries";
 import LoginForm from "./LoginForm";
 import OtpForm from "./OtpForm";
 import RegisterForm from "./RegisterForm";
+import Image from "next/image";
 
 export default function AuthContainer() {
   const { data: me, isSuccess } = useMe();
@@ -20,9 +21,15 @@ export default function AuthContainer() {
     <div dir="rtl" className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-3xl border border-border bg-card backdrop-blur-xl shadow-2xl overflow-hidden">
         <div className="flex flex-col items-center gap-3 pt-10 pb-6 px-6">
-          <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+          {/* <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
             <span className="text-primary-foreground text-2xl font-black">P</span>
-          </div>
+          </div> */}
+          <Image    
+            src="/images/pichidiLogo.svg"
+            alt="Logo"
+            width={120}
+            height={120}
+          />
           <h1 className="text-foreground text-xl font-bold tracking-tight">Pichidi</h1>
           <p className="text-muted-foreground text-xs">دروازهٔ ورود به پنل مدیریت</p>
         </div>

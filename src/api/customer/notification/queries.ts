@@ -6,7 +6,7 @@ export const customerNotificationKeys = {
     all: ["customer", "notifications"] as const,
 };
 
-export function useCustomerNotifications() {
+export function useCustomerNotifications(enabled = true) {
     return useQuery({
         queryKey: customerNotificationKeys.all,
         queryFn: () => customerNotificationApi.getAll({ per_page: 20 }),
@@ -15,8 +15,18 @@ export function useCustomerNotifications() {
             unreadCount: res?.unreadCount ?? 0,
         }),
         refetchInterval: 30000, // poll every 30s
+        enabled,
     });
 }
+
+// customer/notification/queries.ts
+// export function useCustomerNotifications(enabled = true) {
+//     return useQuery({
+//         queryKey: ["customer", "notifications"],
+//         queryFn: notificationApi.getAll, // whatever it's called
+//         enabled,
+//     });
+// }
 
 export function useMarkCustomerNotificationRead() {
     const qc = useQueryClient();

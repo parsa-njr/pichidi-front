@@ -6,7 +6,7 @@ export const userNotificationKeys = {
     all: ["user", "notifications"] as const,
 };
 
-export function useUserNotifications() {
+export function useUserNotifications(enabled = true) {
     return useQuery({
         queryKey: userNotificationKeys.all,
         queryFn: () => userNotificationApi.getAll({ per_page: 20 }),
@@ -15,6 +15,7 @@ export function useUserNotifications() {
             unreadCount: res?.unreadCount ?? 0,
         }),
         refetchInterval: 30000,
+        enabled,
     });
 }
 

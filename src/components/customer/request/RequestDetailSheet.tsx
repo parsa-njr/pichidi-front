@@ -47,11 +47,11 @@ export default function RequestDetailSheet({ req, onAccept, onReject, acting }: 
             )}
 
             <div className={`flex items-center justify-between p-4 rounded-2xl border mb-4 ${s.bg}`}>
-                <s.Icon className={`w-8 h-8 ${s.color}`} />
                 <div className="text-right">
                     <p className="text-xs text-gray-400 mb-0.5">وضعیت درخواست</p>
                     <p className={`text-base font-semibold ${s.color}`}>{s.label}</p>
                 </div>
+                <s.Icon className={`w-8 h-8 ${s.color}`} />
             </div>
 
             {req.status === "rejected" && req.customerNote && (

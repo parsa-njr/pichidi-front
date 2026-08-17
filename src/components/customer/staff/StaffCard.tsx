@@ -1,5 +1,6 @@
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import Avatar from "@/components/shared/Avatar";
+import { resolveImageUrl } from "@/utils/resolveImageUrl";
 
 interface IUser {
     _id: string;
@@ -45,7 +46,7 @@ export default function StaffCard({ user, menuOpen, onToggleMenu, onEdit, onDele
                     </div>
                 )}
             </div>
-            <Avatar name={user.name} image={user.profileImage} />
+            <Avatar name={user.name} image={resolveImageUrl(user.profileImage)} />
             <div className="flex-1 text-right">
                 <p className="text-sm font-semibold text-gray-800">{user.name}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{user.phone}</p>

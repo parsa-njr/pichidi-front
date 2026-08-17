@@ -8,6 +8,7 @@ export default function ReportSummaryCard({ total }: ReportSummaryCardProps) {
     const items = [
         { label: "ساعات کاری", value: total.totalActualTime },
         { label: "مرخصی", value: total.totalLeaveTime },
+        { label: "اضافه‌کاری", value: total.totalOvertime },
         { label: "تاخیر", value: total.totalDelay },
         { label: "کسری", value: total.totalDeficit },
     ];

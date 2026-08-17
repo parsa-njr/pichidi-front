@@ -7,13 +7,16 @@ export interface IDayReport {
     actualCheckOut?: string;
     actualMinutes?: string;
     leaveMinutes?: string;
+    overtimeMinutes?: string;
     delayMinutes?: string;
+    deficitMinutes?: string;
     status: string;
 }
 
 export interface ITotalReport {
     totalActualTime: string;
     totalLeaveTime: string;
+    totalOvertime: string;
     totalDelay: string;
     totalDeficit: string;
     statusCount: Record<string, number>;

@@ -18,10 +18,7 @@ export default function ReportDayCard({ day, expanded, onToggle }: ReportDayCard
     return (
         <div dir="rtl" className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-3 overflow-hidden">
             <button onClick={onToggle} className="w-full flex items-center justify-between px-4 py-3.5">
-                {expanded
-                    ? <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    : <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />}
-                <div className="flex items-center gap-3 flex-1 justify-end">
+                <div className="flex items-center gap-3  justify-start">
                     <div className="text-right">
                         <p className="text-sm font-semibold text-gray-800">{dateLabel}</p>
                         <p className="text-xs text-gray-400 mt-0.5">
@@ -30,6 +27,9 @@ export default function ReportDayCard({ day, expanded, onToggle }: ReportDayCard
                     </div>
                     <StatusBadge label={s.label} className={`${s.bg} ${s.color}`} />
                 </div>
+                {expanded
+                    ? <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    : <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />}
             </button>
 
             {expanded && (
@@ -38,7 +38,9 @@ export default function ReportDayCard({ day, expanded, onToggle }: ReportDayCard
                     <DetailRow label="خروج" value={day.actualCheckOut} />
                     <DetailRow label="ساعات کاری" value={day.actualMinutes} />
                     <DetailRow label="مرخصی" value={day.leaveMinutes} />
+                    <DetailRow label="اضافه‌کاری" value={day.overtimeMinutes} />
                     <DetailRow label="تاخیر" value={day.delayMinutes} />
+                    <DetailRow label="کسری" value={day.deficitMinutes} />
                 </div>
             )}
         </div>

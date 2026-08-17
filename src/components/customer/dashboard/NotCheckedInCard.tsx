@@ -32,13 +32,14 @@ export default function NotCheckedInCard({ count, names }: NotCheckedInCardProps
                     </div>
                 ) : (
                     <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 rounded-2xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                <AlertCircle className="w-5 h-5 text-red-500" />
+                            </div>
                         <div className="text-right">
                             <p className="text-sm font-bold text-gray-800">{count} نفر هنوز ورود نزده‌اند</p>
                             <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[180px]">{names || "—"}</p>
                         </div>
-                        <div className="w-11 h-11 rounded-2xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                            <AlertCircle className="w-5 h-5 text-red-500" />
-                        </div>
+                        
                     </div>
                 )}
                 <ChevronLeft className="w-4 h-4 text-gray-300 flex-shrink-0" />

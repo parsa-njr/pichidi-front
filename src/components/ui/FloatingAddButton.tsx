@@ -10,7 +10,7 @@ export default function FloatingAddButton({ onClick, icon }: FloatingAddButtonPr
     return (
         <button
             onClick={onClick}
-            className="fixed bottom-24 left-5 w-14 h-14 bg-primary rounded-full shadow-lg flex items-center justify-center z-30 active:scale-95 transition-transform"
+            className="absolute bottom-24 right-5 w-14 h-14 bg-primary rounded-full shadow-lg flex items-center justify-center z-30 active:scale-95 transition-transform"
         >
             {icon ?? <Plus className="w-6 h-6 text-white" />}
         </button>
